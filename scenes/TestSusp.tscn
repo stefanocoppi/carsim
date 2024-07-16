@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://ue1v286a82bt"]
+[gd_scene load_steps=7 format=3 uid="uid://ue1v286a82bt"]
 
-[ext_resource type="PackedScene" uid="uid://b0ue15kdmmusx" path="res://assets/plane.gltf" id="1_ueh0j"]
+[ext_resource type="PackedScene" uid="uid://dhjdsg6rsvub4" path="res://scenes/PlayGound.tscn" id="2_4hjdd"]
 [ext_resource type="Script" path="res://scripts/FreeCamera.gd" id="2_q6kx2"]
+[ext_resource type="PackedScene" uid="uid://cmqmmyexlf0dd" path="res://scenes/Body.tscn" id="3_sct6b"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_pe4aa"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -27,11 +28,13 @@ shadow_enabled = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_5uqdw")
 
-[node name="plane" parent="." instance=ExtResource("1_ueh0j")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.74401, 0, 5.23905)
-
 [node name="FreeCamera" type="Camera3D" parent="."]
-transform = Transform3D(-0.255446, 0, 0.966824, 0, 1, 0, -0.966824, 0, -0.255446, 44.4528, 160.161, -258.772)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6, -15)
 fov = 80.0
 far = 6000.0
 script = ExtResource("2_q6kx2")
+
+[node name="PlayGound" parent="." instance=ExtResource("2_4hjdd")]
+
+[node name="Body" parent="." instance=ExtResource("3_sct6b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
