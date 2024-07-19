@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dhjdsg6rsvub4" path="res://scenes/PlayGound.tscn" id="2_4hjdd"]
 [ext_resource type="Script" path="res://scripts/FreeCamera.gd" id="2_q6kx2"]
-[ext_resource type="PackedScene" uid="uid://cmqmmyexlf0dd" path="res://scenes/Body.tscn" id="3_sct6b"]
+[ext_resource type="PackedScene" uid="uid://dc5svwcnkvnly" path="res://scenes/car.tscn" id="4_tuun2"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_pe4aa"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -30,11 +30,12 @@ environment = SubResource("Environment_5uqdw")
 
 [node name="FreeCamera" type="Camera3D" parent="."]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6, -15)
+current = true
 fov = 80.0
 far = 6000.0
 script = ExtResource("2_q6kx2")
 
 [node name="PlayGound" parent="." instance=ExtResource("2_4hjdd")]
 
-[node name="Body" parent="." instance=ExtResource("3_sct6b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
+[node name="Car" parent="." instance=ExtResource("4_tuun2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.09463, 0)

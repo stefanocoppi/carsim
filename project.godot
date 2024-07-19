@@ -19,6 +19,15 @@ config/icon="res://icon.svg"
 window/size/viewport_width=1280
 window/size/viewport_height=720
 
+[layer_names]
+
+3d_physics/layer_1="Ground"
+3d_physics/layer_2="Objects"
+
+[physics]
+
+common/physics_ticks_per_second=240
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

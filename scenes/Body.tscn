@@ -1,4 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://cmqmmyexlf0dd"]
+[gd_scene load_steps=6 format=3 uid="uid://cmqmmyexlf0dd"]
+
+[ext_resource type="Script" path="res://scripts/raycast_suspension.gd" id="1_p5sbo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ud03v"]
 
@@ -21,3 +23,10 @@ shape = SubResource("BoxShape3D_u1n2j")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_mwur5")
 skeleton = NodePath("")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -2.5)
+target_position = Vector3(0, -2, 0)
+debug_shape_custom_color = Color(0.909804, 0.909804, 0.909804, 1)
+debug_shape_thickness = 4
+script = ExtResource("1_p5sbo")
