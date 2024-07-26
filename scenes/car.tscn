@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/car.gd" id="1_kmvh3"]
 [ext_resource type="PackedScene" uid="uid://b4matilv5g658" path="res://assets/car/sport_car.glb" id="1_qqenn"]
-[ext_resource type="Script" path="res://scripts/raycast_suspension.gd" id="2_5ajml"]
+[ext_resource type="Script" path="res://scripts/wheel.gd" id="2_5ajml"]
 [ext_resource type="Texture2D" uid="uid://whobheeyh0hm" path="res://assets/car/sport_car_colorpalette8x8.png" id="3_10wsx"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_h7x0j"]
