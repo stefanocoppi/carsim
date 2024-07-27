@@ -30,6 +30,6 @@ func _physics_process(delta):
 	wheel_rr.apply_forces(delta)
 	wheel_rl.apply_forces(delta)
 	
-	var drive_torque = 10.0
+	var drive_torque = 0.0
 	wheel_rl.apply_torque(drive_torque,0.0,delta)
 	wheel_rr.apply_torque(drive_torque,0.0,delta)

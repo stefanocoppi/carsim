@@ -22,6 +22,11 @@ var spin: float = 0.0
 var y_force: float = 0.0
 var force_vec = Vector3.ZERO
 var wheel_inertia: float = 0.0
+var prev_pos = Vector3.ZERO
+var local_vel = Vector3.ZERO
+var z_vel:float = 0.0
+var slip_vec: Vector2 = Vector2.ZERO
+
 
 @onready var wheel_mesh = $MeshInstance3D
 @onready var car = $'..' # ottiene il nodo padre
@@ -47,6 +52,17 @@ func _physics_process(delta):
 
 
 func apply_forces(delta):
+	# local_vel = (global_transform.origin - prev_pos) / delta * global_transform.basis
+	#var origin_world = global_transform.origin
+	#print("origin_world=%s" % origin_world)
+	#var origin_local = global_transform.origin * global_transform.basis.transposed()
+	#print("origin_local=%s" % origin_local)
+	local_vel = (global_transform.origin - prev_pos) / delta * global_transform.basis.inverse()
+	print("local_vel=%s" % local_vel)
+	z_vel = -local_vel.z
+	var planar_vect = Vector2(local_vel.x, local_vel.z).normalized()
+	prev_pos = global_transform.origin
+	
 	if is_colliding():
 		spring_curr_length = get_collision_point().distance_to(global_transform.origin) - tire_radius
 	else:
@@ -77,9 +93,20 @@ func apply_forces(delta):
 	y_force = max(0, y_force)
 	print("y_force=%s" % y_force)
 	
+	# calcola lo slip
+	slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
+	slip_vec.y = 0.0 # Y slip is the longitudinal Z slip
+	
+	
 	# applica le forze allo chassis dell'auto
 	if is_colliding():
-		
+		if not is_zero_approx(z_vel):
+			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
+		else:
+			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel + 0.0000001)
+	
+		print("slip_vec=%s" % slip_vec)
+	
 		var contact = get_collision_point() - car.global_transform.origin
 		var normal = get_collision_normal()
 		
