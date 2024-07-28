@@ -1,4 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dslgdivf1nqj0"]
+[gd_scene load_steps=7 format=3 uid="uid://dslgdivf1nqj0"]
+
+[ext_resource type="Script" path="res://scenes/gui/physics_debug.gd" id="1_ufebv"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_3pnq7"]
 bg_color = Color(0.341176, 0.341176, 0.341176, 0.160784)
@@ -21,10 +23,13 @@ border_color = Color(0.942823, 0.942823, 0.942823, 1)
 
 [sub_resource type="SystemFont" id="SystemFont_22vmt"]
 
+[sub_resource type="SystemFont" id="SystemFont_cxk7f"]
+
 [node name="PhysicsDebug" type="Panel"]
 offset_right = 512.0
 offset_bottom = 309.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_3pnq7")
+script = ExtResource("1_ufebv")
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 0
@@ -45,9 +50,18 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_prf41")
 layout_mode = 0
 offset_right = 256.0
 offset_bottom = 16.0
+theme_override_colors/font_color = Color(1, 0.931, 0.31, 1)
 theme_override_fonts/font = SubResource("SystemFont_22vmt")
 theme_override_font_sizes/font_size = 10
 text = "Tyre FL"
+
+[node name="Text" type="Label" parent="TireFL"]
+layout_mode = 0
+offset_top = 20.0
+offset_right = 256.0
+offset_bottom = 140.0
+theme_override_fonts/font = SubResource("SystemFont_cxk7f")
+theme_override_font_sizes/font_size = 11
 
 [node name="TireFR" type="Panel" parent="."]
 layout_mode = 0
@@ -61,10 +75,18 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_prf41")
 layout_mode = 0
 offset_right = 256.0
 offset_bottom = 16.0
+theme_override_colors/font_color = Color(1, 0.929412, 0.309804, 1)
 theme_override_fonts/font = SubResource("SystemFont_22vmt")
 theme_override_font_sizes/font_size = 10
 text = "Tyre FR
 "
+
+[node name="Text" type="Label" parent="TireFR"]
+offset_top = 20.0
+offset_right = 256.0
+offset_bottom = 140.0
+theme_override_fonts/font = SubResource("SystemFont_cxk7f")
+theme_override_font_sizes/font_size = 11
 
 [node name="TireRL" type="Panel" parent="."]
 layout_mode = 0
@@ -77,9 +99,17 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_prf41")
 layout_mode = 0
 offset_right = 256.0
 offset_bottom = 16.0
+theme_override_colors/font_color = Color(1, 0.929412, 0.309804, 1)
 theme_override_fonts/font = SubResource("SystemFont_22vmt")
 theme_override_font_sizes/font_size = 10
 text = "Tyre RL"
+
+[node name="Text" type="Label" parent="TireRL"]
+offset_top = 20.0
+offset_right = 256.0
+offset_bottom = 140.0
+theme_override_fonts/font = SubResource("SystemFont_cxk7f")
+theme_override_font_sizes/font_size = 11
 
 [node name="TireRR" type="Panel" parent="."]
 layout_mode = 0
@@ -93,7 +123,15 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_prf41")
 layout_mode = 0
 offset_right = 256.0
 offset_bottom = 16.0
+theme_override_colors/font_color = Color(1, 0.929412, 0.309804, 1)
 theme_override_fonts/font = SubResource("SystemFont_22vmt")
 theme_override_font_sizes/font_size = 10
 text = "Tyre RR
 "
+
+[node name="Text" type="Label" parent="TireRR"]
+offset_top = 20.0
+offset_right = 256.0
+offset_bottom = 140.0
+theme_override_fonts/font = SubResource("SystemFont_cxk7f")
+theme_override_font_sizes/font_size = 11
