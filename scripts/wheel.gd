@@ -96,17 +96,13 @@ func apply_forces(delta):
 	# calcola lo slip
 	slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
 	slip_vec.y = 0.0 # Y slip is the longitudinal Z slip
+	if not is_zero_approx(z_vel):
+		slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
 	
+	print("slip_vec=%s" % slip_vec)
 	
 	# applica le forze allo chassis dell'auto
 	if is_colliding():
-		if not is_zero_approx(z_vel):
-			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
-		else:
-			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel + 0.0000001)
-	
-		print("slip_vec=%s" % slip_vec)
-	
 		var contact = get_collision_point() - car.global_transform.origin
 		var normal = get_collision_normal()
 		
