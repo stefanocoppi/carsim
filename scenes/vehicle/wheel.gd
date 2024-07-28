@@ -1,6 +1,10 @@
 class_name Wheel
 extends RayCast3D
 
+
+var tire_model:BaseTireModel
+
+
 # parametri delle sospensioni
 var spring_length = 0.1
 var wheel_mass = 15.0
@@ -21,12 +25,13 @@ var spring_speed_mm_per_seconds:float = 0.0
 var spin: float = 0.0
 var y_force: float = 0.0
 var force_vec = Vector3.ZERO
+var planar_vect = Vector2.ZERO
 var wheel_inertia: float = 0.0
 var prev_pos = Vector3.ZERO
 var local_vel = Vector3.ZERO
 var z_vel:float = 0.0
 var slip_vec: Vector2 = Vector2.ZERO
-
+var surface_mu = 1.0
 
 @onready var wheel_mesh = $MeshInstance3D
 @onready var car = $'..' # ottiene il nodo padre
@@ -36,9 +41,11 @@ func _ready():
 	set_target_position(Vector3.DOWN * (spring_length + tire_radius))
 	
 	wheel_inertia = 0.5 * wheel_mass * pow(tire_radius, 2)
+	
+	tire_model = PacejkaTireModel.new()
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+
 func _process(delta):
 	#DebugDraw3D.draw_line(global_position,global_position+target_position,Color.WHITE)
 	
@@ -58,9 +65,11 @@ func apply_forces(delta):
 	#var origin_local = global_transform.origin * global_transform.basis.transposed()
 	#print("origin_local=%s" % origin_local)
 	local_vel = (global_transform.origin - prev_pos) / delta * global_transform.basis.inverse()
-	print("local_vel=%s" % local_vel)
+	#print("local_vel=%s" % local_vel)
 	z_vel = -local_vel.z
-	var planar_vect = Vector2(local_vel.x, local_vel.z).normalized()
+	planar_vect = Vector2(local_vel.x, local_vel.z)
+	if planar_vect.length()> 0.01:
+		planar_vect = planar_vect.normalized()
 	prev_pos = global_transform.origin
 	
 	if is_colliding():
@@ -72,15 +81,15 @@ func apply_forces(delta):
 	
 	# calcolo la compressione della molla in mm
 	spring_load_mm = (spring_length - spring_curr_length) * 1000
-	print("spring_load_mm=%s" % spring_load_mm)
+	#print("spring_load_mm=%s" % spring_load_mm)
 	
 	# calcola la forza della molla in N (Legge di Hooke)
 	spring_load_newton = spring_load_mm * spring_stiffness
-	print("spring_load_newton=%s" % spring_load_newton)
+	#print("spring_load_newton=%s" % spring_load_newton)
 	
 	# calcola la velocità di movimento della sospensione in mm per sec
 	spring_speed_mm_per_seconds = (spring_load_mm - prev_spring_load_mm) / delta
-	print("spring_speed_mm_per_seconds=%s" % spring_speed_mm_per_seconds)
+	#print("spring_speed_mm_per_seconds=%s" % spring_speed_mm_per_seconds)
 	prev_spring_load_mm = spring_load_mm
 	
 	# calcola la forza di smorzamento in N e la addiziona a spring_load
@@ -91,7 +100,7 @@ func apply_forces(delta):
 	
 	y_force = spring_load_newton
 	y_force = max(0, y_force)
-	print("y_force=%s" % y_force)
+	#print("y_force=%s" % y_force)
 	
 	# calcola lo slip
 	slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
@@ -99,18 +108,24 @@ func apply_forces(delta):
 	if not is_zero_approx(z_vel):
 		slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
 	
-	print("slip_vec=%s" % slip_vec)
-	
 	# applica le forze allo chassis dell'auto
 	if is_colliding():
+		
+		# calcola le forze generate dai pneumatici
+		force_vec = tire_model.update_tire_forces(slip_vec,y_force,surface_mu)
+		
 		var contact = get_collision_point() - car.global_transform.origin
 		var normal = get_collision_normal()
 		
 		car.apply_force(normal * y_force, contact)
+		car.apply_force(global_transform.basis.x * force_vec.x, contact)
+		car.apply_force(global_transform.basis.z * force_vec.z, contact)
+	else:
+		spin -= sign(spin) * delta * 2 / wheel_inertia # stop undriven wheels from spinning endlessly
 
 
 func apply_torque(drive_torque,brake_torque,delta):
-	var net_torque = force_vec.y * tire_radius
+	var net_torque = force_vec.z * tire_radius
 	net_torque += drive_torque
 	
 	if abs(spin) < 5 and brake_torque > abs(net_torque):

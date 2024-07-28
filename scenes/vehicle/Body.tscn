@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cmqmmyexlf0dd"]
 
-[ext_resource type="Script" path="res://scripts/wheel.gd" id="1_p5sbo"]
+[ext_resource type="Script" path="res://scenes/vehicle/wheel.gd" id="1_p5sbo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ud03v"]
 

@@ -17,7 +17,7 @@ func _ready():
 
 func _process(delta):
 	pass
-	print("throttle_input=%s" % throttle_input)
+	#print("throttle_input=%s" % throttle_input)
 
 
 func _physics_process(delta):
@@ -31,5 +31,5 @@ func _physics_process(delta):
 	wheel_rl.apply_forces(delta)
 	
 	var drive_torque = 0.0
-	wheel_rl.apply_torque(drive_torque,0.0,delta)
-	wheel_rr.apply_torque(drive_torque,0.0,delta)
+	#wheel_rl.apply_torque(drive_torque,0.0,delta)
+	#wheel_rr.apply_torque(drive_torque,0.0,delta)

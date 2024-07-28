@@ -82,6 +82,7 @@ text = "Tyre FR
 "
 
 [node name="Text" type="Label" parent="TireFR"]
+layout_mode = 0
 offset_top = 20.0
 offset_right = 256.0
 offset_bottom = 140.0
@@ -105,6 +106,7 @@ theme_override_font_sizes/font_size = 10
 text = "Tyre RL"
 
 [node name="Text" type="Label" parent="TireRL"]
+layout_mode = 0
 offset_top = 20.0
 offset_right = 256.0
 offset_bottom = 140.0
@@ -130,6 +132,7 @@ text = "Tyre RR
 "
 
 [node name="Text" type="Label" parent="TireRR"]
+layout_mode = 0
 offset_top = 20.0
 offset_right = 256.0
 offset_bottom = 140.0

@@ -1,8 +1,8 @@
 [gd_scene load_steps=16 format=3 uid="uid://dc5svwcnkvnly"]
 
-[ext_resource type="Script" path="res://scripts/car.gd" id="1_kmvh3"]
+[ext_resource type="Script" path="res://scenes/vehicle/car.gd" id="1_kmvh3"]
 [ext_resource type="PackedScene" uid="uid://b4matilv5g658" path="res://assets/car/sport_car.glb" id="1_qqenn"]
-[ext_resource type="Script" path="res://scripts/wheel.gd" id="2_5ajml"]
+[ext_resource type="Script" path="res://scenes/vehicle/wheel.gd" id="2_5ajml"]
 [ext_resource type="Texture2D" uid="uid://whobheeyh0hm" path="res://assets/car/sport_car_colorpalette8x8.png" id="3_10wsx"]
 [ext_resource type="PackedScene" uid="uid://d3e245l0nmkl5" path="res://scenes/gui/gui.tscn" id="5_smyof"]
 
@@ -148,6 +148,7 @@ far = 1000.0
 
 [node name="ChaseCamera" type="Camera3D" parent="RigidBody3D"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.75638, -4.78454)
+current = true
 far = 1000.0
 
 [node name="sport_car" parent="RigidBody3D" instance=ExtResource("1_qqenn")]
