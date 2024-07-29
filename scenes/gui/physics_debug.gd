@@ -16,15 +16,19 @@ func _ready():
 
 func _process(delta):
 	# stampa lo slip vector
-	tire_fr.text = "local_vel = %s" % car.wheel_fr.local_vel
-	tire_fr.text += "\nslip_vec = %s" % car.wheel_fr.slip_vec
-	tire_fr.text += "\nplanar_vect = %s" % car.wheel_fr.planar_vect
+	#tire_fr.text = "local_vel = %s" % car.wheel_fr.local_vel
+	tire_fr.text = "slip_vec = %s" % car.wheel_fr.slip_vec
+	tire_fr.text += "\nspin = %s" % car.wheel_fr.spin
+	#tire_fr.text += "\nplanar_vect = %s" % car.wheel_fr.planar_vect
 	tire_fr.text += "\nforce_vec = %s" % car.wheel_fr.force_vec
 	tire_fl.text = "slip_vec = %s" % car.wheel_fl.slip_vec
+	tire_fl.text += "\nspin = %s" % car.wheel_fl.spin
 	tire_fl.text += "\nforce_vec = %s" % car.wheel_fl.force_vec
 	tire_rr.text = "slip_vec = %s" % car.wheel_rr.slip_vec
-	tire_rr.text += "\nplanar_vect = %s" % car.wheel_rr.planar_vect
+	#tire_rr.text += "\nplanar_vect = %s" % car.wheel_rr.planar_vect
+	tire_rr.text += "\nspin = %s" % car.wheel_rr.spin
 	tire_rr.text += "\nforce_vec = %s" % car.wheel_rr.force_vec
 	tire_rl.text = "slip_vec = %s" % car.wheel_rl.slip_vec
+	tire_rl.text += "\nspin = %s" % car.wheel_rl.spin
 	tire_rl.text += "\nforce_vec = %s" % car.wheel_rl.force_vec
 	

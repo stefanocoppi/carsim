@@ -125,7 +125,9 @@ func apply_forces(delta):
 
 
 func apply_torque(drive_torque,brake_torque,delta):
+	# traction torque
 	var net_torque = force_vec.z * tire_radius
+	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
 	
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
