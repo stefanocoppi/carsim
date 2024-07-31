@@ -24,7 +24,7 @@ func _process(delta):
 
 func get_engine_torque(_throttle_input) -> float:
 	
-	return 100 * _throttle_input
+	return 200 * _throttle_input
 	
 
 func _physics_process(delta):
@@ -39,7 +39,7 @@ func _physics_process(delta):
 	wheel_rr.apply_forces(delta)
 	wheel_rl.apply_forces(delta)
 	
-	var drive_torque = torque_out
+	var drive_torque = -torque_out
 	var brake_torque = 100.0 * brake_input
 	wheel_fl.apply_torque(0.0,brake_torque,delta)
 	wheel_fr.apply_torque(0.0,brake_torque,delta)

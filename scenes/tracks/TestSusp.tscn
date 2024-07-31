@@ -22,7 +22,7 @@ glow_enabled = true
 [node name="TestSusp" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+transform = Transform3D(-0.36601, -0.289654, -0.884385, -0.807089, 0.571912, 0.146708, 0.463296, 0.767475, -0.443102, 0, 0, 0)
 shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
