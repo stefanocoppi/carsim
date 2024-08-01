@@ -32,6 +32,8 @@ var local_vel = Vector3.ZERO
 var z_vel:float = 0.0
 var slip_vec: Vector2 = Vector2.ZERO
 var surface_mu = 1.0
+var ackermann = 0.15
+
 
 @onready var wheel_mesh = $MeshInstance3D
 @onready var car = $'..' # ottiene il nodo padre
@@ -64,7 +66,7 @@ func apply_forces(delta):
 	#print("origin_world=%s" % origin_world)
 	#var origin_local = global_transform.origin * global_transform.basis.transposed()
 	#print("origin_local=%s" % origin_local)
-	local_vel = (global_transform.origin - prev_pos) / delta * global_transform.basis.inverse()
+	local_vel = (global_transform.origin - prev_pos) / delta * global_transform.basis
 	#print("local_vel=%s" % local_vel)
 	z_vel = -local_vel.z
 	planar_vect = Vector2(local_vel.x, local_vel.z)
@@ -135,3 +137,7 @@ func apply_torque(drive_torque,brake_torque,delta):
 	else:
 		net_torque -= brake_torque * sign(spin)
 		spin += delta * net_torque / wheel_inertia 
+
+
+func steer(input,max_steer):
+	rotation.y = max_steer * (input + (1 -cos(input * 0.5 * PI)) * ackermann)
