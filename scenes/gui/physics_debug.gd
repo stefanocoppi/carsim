@@ -6,6 +6,7 @@ extends Panel
 @onready var tire_fl = $TireFL/Text
 @onready var tire_rr = $TireRR/Text
 @onready var tire_rl = $TireRL/Text
+@onready var console = $Text
 
 
 func _ready():
@@ -35,4 +36,9 @@ func _process(delta):
 	tire_rl.text = "slip_vec = %s" % car.wheel_rl.slip_vec
 	tire_rl.text += "\nspin = %s" % car.wheel_rl.spin
 	tire_rl.text += "\nforce_vec = %s" % car.wheel_rl.force_vec
+	
+	console.text = "Engine rpm= %s" % car.engine.rpm
+	console.text += "\nthrottle= %s" % car.engine.throttle
+	console.text += "\ntorque_out= %s" % car.engine.torque_out
+	
 	

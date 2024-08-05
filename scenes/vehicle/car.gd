@@ -7,6 +7,8 @@ extends RigidBody3D
 @onready var wheel_rr = $WheelRR as Wheel
 @onready var wheel_rl = $WheelRL as Wheel
 
+var engine:Engine_t
+
 var max_steer = 0.3
 var steer_speed = 5.0
 
@@ -18,7 +20,8 @@ var torque_out = 0.0
 
 
 func _ready():
-	pass # Replace with function body.
+	engine = Engine_t.new()
+	engine.start()
 
 
 
@@ -52,6 +55,8 @@ func _physics_process(delta):
 	wheel_fr.steer(steering_amount,max_steer)
 	
 	torque_out = get_engine_torque(throttle_input)
+	engine.throttle = throttle_input
+	engine.loop(delta)
 	
 	wheel_fr.apply_forces(delta)
 	wheel_fl.apply_forces(delta)
