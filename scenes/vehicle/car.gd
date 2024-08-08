@@ -2,6 +2,9 @@ class_name Car
 extends RigidBody3D
 
 
+const MS_TO_KMH = 3.6
+
+
 @onready var wheel_fr = $WheelFR as Wheel
 @onready var wheel_fl = $WheelFL as Wheel
 @onready var wheel_rr = $WheelRR as Wheel
@@ -17,6 +20,11 @@ var brake_input = 0.0
 var steering_input = 0.0
 var steering_amount = 0.0
 var torque_out = 0.0
+
+var avg_front_spin = 0.0
+var rear_brake_torque = 0.0
+var front_brake_torque = 0.0
+var speedometer = 0.0    # Km/h
 
 
 func _ready():
@@ -58,14 +66,45 @@ func _physics_process(delta):
 	engine.throttle = throttle_input
 	engine.loop(delta)
 	
+	freewheel(delta)
+	
 	wheel_fr.apply_forces(delta)
 	wheel_fl.apply_forces(delta)
 	wheel_rr.apply_forces(delta)
 	wheel_rl.apply_forces(delta)
 	
-	var drive_torque = -torque_out
-	var brake_torque = 100.0 * brake_input
-	wheel_fl.apply_torque(0.0,brake_torque,delta)
-	wheel_fr.apply_torque(0.0,brake_torque,delta)
-	wheel_rl.apply_torque(drive_torque,brake_torque,delta)
-	wheel_rr.apply_torque(drive_torque,brake_torque,delta)
+	#var drive_torque = -torque_out
+	#var brake_torque = 100.0 * brake_input
+	#wheel_fl.apply_torque(0.0,brake_torque,delta)
+	#wheel_fr.apply_torque(0.0,brake_torque,delta)
+	#wheel_rl.apply_torque(drive_torque,brake_torque,delta)
+	#wheel_rr.apply_torque(drive_torque,brake_torque,delta)
+
+
+func freewheel(delta):
+	avg_front_spin = 0.0
+	# applica la coppia frenante
+	wheel_fl.apply_torque(0.0,front_brake_torque,delta)
+	wheel_fr.apply_torque(0.0,front_brake_torque,delta)
+	wheel_rl.apply_torque(0.0,rear_brake_torque,delta)
+	wheel_rr.apply_torque(0.0,rear_brake_torque,delta)
+	# calcola la velocità mostrata nel tachimetro
+	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
+	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
+
+
+func engage(torque,delta):
+	avg_front_spin = 0.0
+	var gearing = 1.0
+	var drive_torque = torque * gearing
+	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
+	
+	# differenziale
+	
+	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
+	
+	# applica la coppia frenante
+	wheel_fl.apply_torque(0.0,front_brake_torque,delta)
+	wheel_fr.apply_torque(0.0,front_brake_torque,delta)
+	
+	

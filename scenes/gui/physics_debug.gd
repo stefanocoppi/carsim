@@ -37,7 +37,7 @@ func _process(delta):
 	tire_rl.text += "\nspin = %s" % car.wheel_rl.spin
 	tire_rl.text += "\nforce_vec = %s" % car.wheel_rl.force_vec
 	
-	console.text = "Engine rpm= %s" % car.engine.rpm
+	console.text = "Engine rpm= %s    speed= %s" % [car.engine.rpm,car.speedometer]
 	console.text += "\nthrottle= %s" % car.engine.throttle
 	console.text += "\ntorque_out= %s" % car.engine.torque_out
 	
