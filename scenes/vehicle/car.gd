@@ -9,8 +9,10 @@ const MS_TO_KMH = 3.6
 @onready var wheel_fl = $WheelFL as Wheel
 @onready var wheel_rr = $WheelRR as Wheel
 @onready var wheel_rl = $WheelRL as Wheel
+@onready var wheels = [ wheel_rr, wheel_rl, wheel_fr, wheel_fl]
 
 var engine:Engine_t
+var drivetrain:Drivetrain
 
 var max_steer = 0.3
 var steer_speed = 5.0
@@ -30,7 +32,7 @@ var speedometer = 0.0    # Km/h
 func _ready():
 	engine = Engine_t.new()
 	engine.start()
-
+	drivetrain = Drivetrain.new()
 
 
 func _process(delta):
@@ -62,11 +64,21 @@ func _physics_process(delta):
 	wheel_fl.steer(steering_amount,max_steer)
 	wheel_fr.steer(steering_amount,max_steer)
 	
+	# cambio
+	if Input.is_action_just_pressed("ShiftUp"):
+		drivetrain.shift_up()
+	if Input.is_action_just_pressed("ShiftDown"):
+		drivetrain.shift_down()
+	
+	
 	torque_out = get_engine_torque(throttle_input)
 	engine.throttle = throttle_input
 	engine.loop(delta)
 	
-	freewheel(delta)
+	if drivetrain.selected_gear == 0:
+		freewheel(delta)
+	else:
+		engage(torque_out,delta)
 	
 	wheel_fr.apply_forces(delta)
 	wheel_fl.apply_forces(delta)
@@ -96,15 +108,16 @@ func freewheel(delta):
 func engage(torque,delta):
 	avg_front_spin = 0.0
 	var gearing = 1.0
-	var drive_torque = torque * gearing
+	var drive_torque = -torque * drivetrain.get_gear_ratio()
 	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
 	
-	# differenziale
+	# simulazione della trasmissione
+	drivetrain.apply_torque_to_wheel(drive_torque,front_brake_torque,rear_brake_torque,wheels,delta)
 	
 	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
 	
 	# applica la coppia frenante
-	wheel_fl.apply_torque(0.0,front_brake_torque,delta)
-	wheel_fr.apply_torque(0.0,front_brake_torque,delta)
+	#wheel_fl.apply_torque(0.0,front_brake_torque,delta)
+	#wheel_fr.apply_torque(0.0,front_brake_torque,delta)
 	
 	

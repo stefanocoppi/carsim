@@ -126,7 +126,8 @@ func apply_forces(delta):
 		spin -= sign(spin) * delta * 2 / wheel_inertia # stop undriven wheels from spinning endlessly
 
 
-func apply_torque(drive_torque,brake_torque,delta):
+func apply_torque(drive_torque,brake_torque,delta) -> float:
+	var prev_spin = spin
 	# traction torque
 	var net_torque = force_vec.z * tire_radius
 	# aggiungiamo la coppia del motore
@@ -136,7 +137,12 @@ func apply_torque(drive_torque,brake_torque,delta):
 		spin = 0
 	else:
 		net_torque -= brake_torque * sign(spin)
-		spin += delta * net_torque / wheel_inertia 
+		spin += delta * net_torque / wheel_inertia
+	
+	if drive_torque * delta == 0:
+		return 0.5
+	else:
+		return (spin - prev_spin) * (wheel_inertia) / (drive_torque * delta)
 
 
 func steer(input,max_steer):
