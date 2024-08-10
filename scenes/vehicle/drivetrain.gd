@@ -29,6 +29,7 @@ func get_gear_ratio() -> float:
 	
 
 func differential(torque,brake_torque,wheels,delta):
+	#print("torque= %s" % torque)
 	var t1 = torque * 0.5
 	var t2 = torque * 0.5
 	var diff_sum = 0.0

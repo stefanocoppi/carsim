@@ -107,11 +107,13 @@ func apply_forces(delta):
 	# calcola lo slip
 	slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
 	slip_vec.y = 0.0 # Y slip is the longitudinal Z slip
-	if not is_zero_approx(z_vel):
-		slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
+	
 	
 	# applica le forze allo chassis dell'auto
 	if is_colliding():
+		
+		if not is_zero_approx(z_vel):
+			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
 		
 		# calcola le forze generate dai pneumatici
 		force_vec = tire_model.update_tire_forces(slip_vec,y_force,surface_mu)
@@ -132,6 +134,9 @@ func apply_torque(drive_torque,brake_torque,delta) -> float:
 	var net_torque = force_vec.z * tire_radius
 	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
+	
+	if spin > 0:
+		pass
 	
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
 		spin = 0

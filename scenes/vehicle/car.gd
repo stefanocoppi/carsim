@@ -71,14 +71,16 @@ func _physics_process(delta):
 		drivetrain.shift_down()
 	
 	
-	torque_out = get_engine_torque(throttle_input)
+	#torque_out = get_engine_torque(throttle_input)
 	engine.throttle = throttle_input
 	engine.loop(delta)
+	
+	#print("torque= %s" % engine.torque_out)
 	
 	if drivetrain.selected_gear == 0:
 		freewheel(delta)
 	else:
-		engage(torque_out,delta)
+		engage(engine.torque_out,delta)
 	
 	wheel_fr.apply_forces(delta)
 	wheel_fl.apply_forces(delta)
@@ -108,7 +110,8 @@ func freewheel(delta):
 func engage(torque,delta):
 	avg_front_spin = 0.0
 	var gearing = 1.0
-	var drive_torque = -torque * drivetrain.get_gear_ratio()
+	#print("torque= %s" % torque)
+	var drive_torque = torque * drivetrain.get_gear_ratio()
 	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
 	
 	# simulazione della trasmissione
