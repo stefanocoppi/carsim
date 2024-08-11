@@ -135,8 +135,8 @@ func apply_torque(drive_torque,brake_torque,delta) -> float:
 	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
 	
-	if spin > 0:
-		pass
+	#if spin > 0:
+		#pass
 	
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
 		spin = 0

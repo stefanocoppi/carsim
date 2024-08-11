@@ -9,7 +9,7 @@ const MS_TO_KMH = 3.6
 @onready var wheel_fl = $WheelFL as Wheel
 @onready var wheel_rr = $WheelRR as Wheel
 @onready var wheel_rl = $WheelRL as Wheel
-@onready var wheels = [ wheel_rr, wheel_rl, wheel_fr, wheel_fl]
+@onready var wheels = [ wheel_rl, wheel_rr, wheel_fl, wheel_fr]
 
 var engine:Engine_t
 var drivetrain:Drivetrain
@@ -70,8 +70,6 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("ShiftDown"):
 		drivetrain.shift_down()
 	
-	
-	#torque_out = get_engine_torque(throttle_input)
 	engine.throttle = throttle_input
 	engine.loop(delta)
 	
@@ -86,13 +84,6 @@ func _physics_process(delta):
 	wheel_fl.apply_forces(delta)
 	wheel_rr.apply_forces(delta)
 	wheel_rl.apply_forces(delta)
-	
-	#var drive_torque = -torque_out
-	#var brake_torque = 100.0 * brake_input
-	#wheel_fl.apply_torque(0.0,brake_torque,delta)
-	#wheel_fr.apply_torque(0.0,brake_torque,delta)
-	#wheel_rl.apply_torque(drive_torque,brake_torque,delta)
-	#wheel_rr.apply_torque(drive_torque,brake_torque,delta)
 
 
 func freewheel(delta):
@@ -109,13 +100,13 @@ func freewheel(delta):
 
 func engage(torque,delta):
 	avg_front_spin = 0.0
-	var gearing = 1.0
+
 	#print("torque= %s" % torque)
-	var drive_torque = torque * drivetrain.get_gear_ratio()
+	#var drive_torque = torque * drivetrain.get_gear_ratio()
 	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
 	
 	# simulazione della trasmissione
-	drivetrain.apply_torque_to_wheel(drive_torque,front_brake_torque,rear_brake_torque,wheels,delta)
+	drivetrain.apply_torque_to_wheel(torque,front_brake_torque,rear_brake_torque,wheels,delta)
 	
 	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
 	

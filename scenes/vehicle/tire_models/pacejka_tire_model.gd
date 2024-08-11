@@ -15,7 +15,7 @@ var pacejka_e = 0.0
 # equazione della magic formula di Pacejka
 func pacejka(slip, B, C, D, E, normal_load):
 	return normal_load * D * sin(C * atan(B * slip - E * (B * slip - atan(B * slip))))
-
+	
 
 func update_tire_forces(slip: Vector2, normal_load: float, surface_mu: float) -> Vector3:
 	

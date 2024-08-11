@@ -146,11 +146,12 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -4.054
 far = 1000.0
 
 [node name="ChaseCamera" type="Camera3D" parent="RigidBody3D"]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 1.75638, -4.78454)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.756, 4.785)
 current = true
 far = 1000.0
 
 [node name="sport_car" parent="RigidBody3D" instance=ExtResource("1_qqenn")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
 [node name="Wheel_001" parent="RigidBody3D/sport_car" index="0"]
 visible = false
@@ -162,7 +163,7 @@ mesh = SubResource("ArrayMesh_plop6")
 mesh = SubResource("ArrayMesh_x17kq")
 
 [node name="WheelFR" type="RayCast3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.778081, 0.382942, 1.24594)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.782, 0.383, -1.22345)
 script = ExtResource("2_5ajml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/WheelFR"]
@@ -171,7 +172,7 @@ mesh = SubResource("ArrayMesh_gd6ys")
 skeleton = NodePath("")
 
 [node name="WheelFL" type="RayCast3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.746034, 0.382942, 1.24594)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.772457, 0.382942, -1.22402)
 script = ExtResource("2_5ajml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/WheelFL"]
@@ -180,20 +181,20 @@ mesh = SubResource("ArrayMesh_gd6ys")
 skeleton = NodePath("")
 
 [node name="WheelRR" type="RayCast3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.813669, 0.382942, -1.54189)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.787692, 0.382942, 1.15105)
 script = ExtResource("2_5ajml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/WheelRR"]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0.384408)
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_gd6ys")
 skeleton = NodePath("")
 
 [node name="WheelRL" type="RayCast3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.781797, 0.382942, -1.54189)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.748415, 0.382942, 1.15557)
 script = ExtResource("2_5ajml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/WheelRL"]
-transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0.384408)
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("ArrayMesh_gd6ys")
 skeleton = NodePath("")
 
