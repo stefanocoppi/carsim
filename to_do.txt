@@ -1,0 +1,9 @@
+To Do:
+	
+- validazione sospensioni
+- validazione calcolo spin
+- validazione calcolo slip lat
+- validazione calcolo slip long
+- validazione engine
+- validazione drivetrain
+- simulazione freni
