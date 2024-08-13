@@ -6,12 +6,12 @@ var tire_model:BaseTireModel
 
 
 # parametri delle sospensioni
-var spring_length = 0.1
-var wheel_mass = 15.0
-var tire_radius = 0.31
-var spring_stiffness = 45.0
-var bump = 3.5
-var rebound = 4.0
+var spring_length = 0.15 # 0.1
+var wheel_mass = 30.0
+var tire_radius = 0.3 #0.31
+var spring_stiffness = 60.0
+var bump = 8.0
+var rebound = 9.0
 
 
 # variabili delle sospensioni
@@ -26,7 +26,7 @@ var spin: float = 0.0
 var y_force: float = 0.0
 var force_vec = Vector3.ZERO
 var planar_vect = Vector2.ZERO
-var wheel_inertia: float = 0.0
+var wheel_inertia: float = 1.35
 var prev_pos = Vector3.ZERO
 var local_vel = Vector3.ZERO
 var z_vel:float = 0.0
@@ -105,18 +105,24 @@ func apply_forces(delta):
 	#print("y_force=%s" % y_force)
 	
 	# calcola lo slip
-	#slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
-	#slip_vec.y = 0.0 # Y slip is the longitudinal Z slip
+	slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
+	slip_vec.y = 0.0 # Y slip is the longitudinal Z slip
 	
 	
 	# applica le forze allo chassis dell'auto
 	if is_colliding():
+		#z_vel = 8.9
+		#spin = 30.0
+		if not is_zero_approx(z_vel):
+			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
+		else:
+			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel + 0.0000001)
+			
+		#print("slip_vec=%s" % slip_vec)
 		
-		#if not is_zero_approx(z_vel):
-			#slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
 		surface_mu = 1.0
-		y_force = 2500.0
-		slip_vec = Vector2(0.0,-0.05)
+		#y_force = 2500.0
+		#slip_vec = Vector2(slip_vec.x,-0.01)
 		
 		# calcola le forze generate dai pneumatici
 		force_vec = tire_model.update_tire_forces(slip_vec,y_force,surface_mu)
@@ -132,14 +138,12 @@ func apply_forces(delta):
 
 
 func apply_torque(drive_torque,brake_torque,delta) -> float:
+	
 	var prev_spin = spin
 	# traction torque
 	var net_torque = force_vec.y * tire_radius
 	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
-	
-	#if spin > 0:
-		#pass
 	
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
 		spin = 0

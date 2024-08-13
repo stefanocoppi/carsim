@@ -38,4 +38,4 @@ script = ExtResource("2_q6kx2")
 [node name="PlayGound" parent="." instance=ExtResource("2_4hjdd")]
 
 [node name="Car" parent="." instance=ExtResource("4_tuun2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 88.7957)
