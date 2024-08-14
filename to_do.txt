@@ -4,6 +4,6 @@ To Do:
 - validazione calcolo spin OK
 - validazione calcolo slip lat  OK
 - validazione calcolo slip long OK
-- validazione engine
-- validazione drivetrain
+- validazione engine OK
+- validazione drivetrain OK
 - simulazione freni

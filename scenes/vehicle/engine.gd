@@ -1,12 +1,12 @@
 class_name Engine_t
 
 # parametri
-const MAX_RPM = 6000.0
-const MAX_TORQUE = 200.0    # Nm
-const ENGINE_BRAKE = 10.0   # Nm
+const MAX_RPM = 8000.0
+const MAX_TORQUE = 260.0    # Nm
+const ENGINE_BRAKE = 150.0   # Nm
 const ENGINE_DRAG = 0.03    # Nm/rpm
 const AV_2_RPM: float = 60 / TAU
-const ENGINE_INERTIA_MOMENT: float = 0.25
+const ENGINE_INERTIA_MOMENT: float = 0.14
 const RPM_IDLE = 900
 var torque_curve:Curve
 
@@ -31,18 +31,22 @@ func _init():
 # fornisce la coppia all'albero motore, in funzione di rpm e posizione
 # dell'acceleratore (0.0-1.0)
 func get_torque(p_rpm, p_throttle) -> float:
-		
+	
 	# rpm normalizzati tra 0 e 1
 	var rpm_normalized = clamp(p_rpm / MAX_RPM, 0.0, 1.0)
 	# ottiene la coppia normalizzata dalla curva di coppia
 	var norm_torque = torque_curve.sample_baked(rpm_normalized)
 	# coppia resistente
-	var t0 = -(ENGINE_BRAKE + ENGINE_DRAG * p_rpm)
+	#var t0 = -(ENGINE_BRAKE + ENGINE_DRAG * p_rpm)
+	var t0 = - ENGINE_BRAKE * rpm_normalized
+	
 	# moltiplica la coppia normalizzata per quella massima
 	var t1 = norm_torque * MAX_TORQUE
 		
 	# coppia all'albero motore: interpolazione lineare tra t0, t1 in base alla posizione dell'acceleratore
 	var torque_out = lerpf(t0, t1, p_throttle)
+	
+	#print("torque_out=%s" % torque_out)
 	
 	return torque_out
 
@@ -61,6 +65,8 @@ func loop(delta):
 		rpm -= 500
 	
 	rpm = max(rpm,RPM_IDLE)
+	
+	#print("rpm=%s" % rpm)
 
 
 # avvia il motore, impostando gli rpm al minimo

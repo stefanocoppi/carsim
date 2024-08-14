@@ -1,5 +1,5 @@
-[gd_resource type="Curve" format=3 uid="uid://cqsgxqkxvcgog"]
+[gd_resource type="Curve" format=3 uid="uid://bs5n1hkjs35sb"]
 
 [resource]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.125899, 0.321324), 7.92947, 7.92947, 0, 0, Vector2(0.248201, 1), 0.0847552, 0.0, 0, 0, Vector2(0.485714, 0.912088), -1.65498, -1.65498, 0, 0, Vector2(0.952381, 0.747253), 0.0, 0.0, 0, 0]
-point_count = 5
+_data = [Vector2(0, 0.663636), 0.0, 0.0, 0, 0, Vector2(0.4, 0.945454), 0.414404, 0.414404, 0, 0, Vector2(0.646753, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.290909), -4.9, 0.0, 0, 0]
+point_count = 4
