@@ -7,3 +7,4 @@ To Do:
 - validazione engine OK
 - validazione drivetrain OK
 - simulazione freni
+- cambio: caduta regime, limite alla velocità massima raggiungibile in ciascuna marcia

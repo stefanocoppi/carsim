@@ -13,6 +13,7 @@ const MS_TO_KMH = 3.6
 
 var engine:Engine_t
 var drivetrain:Drivetrain
+var brakes:Brake
 
 var max_steer = 0.3
 var steer_speed = 5.0
@@ -33,6 +34,8 @@ func _ready():
 	engine = Engine_t.new()
 	engine.start()
 	drivetrain = Drivetrain.new()
+	drivetrain.engine_inertia = engine.ENGINE_INERTIA_MOMENT
+	brakes = Brake.new()
 
 
 func _process(delta):
@@ -40,17 +43,17 @@ func _process(delta):
 	#print("throttle_input=%s" % throttle_input)
 
 
-func get_engine_torque(_throttle_input) -> float:
-	
-	return 200 * _throttle_input
-	
-
 func _physics_process(delta):
 	
 	throttle_input = Input.get_action_strength("Throttle")
 	brake_input = Input.get_action_strength("Brake")
 	steering_input = Input.get_action_strength("SteerLeft") - Input.get_action_strength("SteerRight")
-		
+	
+	# frenatura
+	var brakes_torques = brakes.get_brake_torques(brake_input, delta)
+	front_brake_torque = brakes_torques.x
+	rear_brake_torque = brakes_torques.y
+	
 	# sterzatura delle ruote
 	if (steering_input < steering_amount):
 		steering_amount -= steer_speed * delta
@@ -89,10 +92,10 @@ func _physics_process(delta):
 func freewheel(delta):
 	avg_front_spin = 0.0
 	# applica la coppia frenante
-	wheel_fl.apply_torque(0.0,front_brake_torque,delta)
-	wheel_fr.apply_torque(0.0,front_brake_torque,delta)
-	wheel_rl.apply_torque(0.0,rear_brake_torque,delta)
-	wheel_rr.apply_torque(0.0,rear_brake_torque,delta)
+	wheel_fl.apply_torque(0.0,front_brake_torque,0.0,delta)
+	wheel_fr.apply_torque(0.0,front_brake_torque,0.0,delta)
+	wheel_rl.apply_torque(0.0,rear_brake_torque,0.0,delta)
+	wheel_rr.apply_torque(0.0,rear_brake_torque,0.0,delta)
 	# calcola la velocità mostrata nel tachimetro
 	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
 	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
