@@ -76,3 +76,7 @@ func start():
 
 func stop():
 	rpm = 0
+
+
+func get_rotv() -> float:
+	return rpm / AV_2_RPM

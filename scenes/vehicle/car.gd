@@ -11,9 +11,10 @@ const MS_TO_KMH = 3.6
 @onready var wheel_rl = $WheelRL as Wheel
 @onready var wheels = [ wheel_rl, wheel_rr, wheel_fl, wheel_fr]
 
-var engine:Engine_t
-var drivetrain:Drivetrain
-var brakes:Brake
+var engine:Engine_t = null
+var drivetrain:Drivetrain = null
+var clutch:Clutch = null
+var brakes:Brake = null
 
 var max_steer = 0.3
 var steer_speed = 5.0
@@ -33,7 +34,8 @@ var speedometer = 0.0    # Km/h
 func _ready():
 	engine = Engine_t.new()
 	engine.start()
-	drivetrain = Drivetrain.new()
+	clutch = Clutch.new(self)
+	drivetrain = Drivetrain.new(self)
 	drivetrain.engine_inertia = engine.ENGINE_INERTIA_MOMENT
 	brakes = Brake.new()
 
@@ -75,10 +77,12 @@ func _physics_process(delta):
 	
 	engine.throttle = throttle_input
 	engine.loop(delta)
+	drivetrain.gearbox_physics_process(delta)
+	clutch.calc_forces()
 	
 	#print("torque= %s" % engine.torque_out)
 	
-	if drivetrain.selected_gear == 0:
+	if drivetrain.current_gear == 0:
 		freewheel(delta)
 	else:
 		engage(engine.torque_out,delta)
@@ -109,7 +113,7 @@ func engage(torque,delta):
 	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
 	
 	# simulazione della trasmissione
-	drivetrain.apply_torque_to_wheel(torque,front_brake_torque,rear_brake_torque,wheels,delta)
+	drivetrain.apply_torque_to_wheel(clutch.output_torque,front_brake_torque,rear_brake_torque,wheels,delta)
 	
 	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
 	
