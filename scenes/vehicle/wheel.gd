@@ -159,3 +159,7 @@ func apply_torque(drive_torque,brake_torque,drive_inertia,delta) -> float:
 
 func steer(input,max_steer):
 	rotation.y = max_steer * (input + (1 -cos(input * 0.5 * PI)) * ackermann)
+
+
+func get_reaction_torque() -> float:
+	return force_vec.y * tire_radius

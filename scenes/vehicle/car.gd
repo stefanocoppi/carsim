@@ -23,18 +23,22 @@ var throttle_input: float = 0.0
 var brake_input = 0.0
 var steering_input = 0.0
 var steering_amount = 0.0
+var clutch_input = 0.0
 var torque_out = 0.0
 
 var avg_front_spin = 0.0
+var avg_rear_spin = 0.0
 var rear_brake_torque = 0.0
 var front_brake_torque = 0.0
 var speedometer = 0.0    # Km/h
+var drive_reaction_torque = 0.0
+var clutch_reaction_torque = 0.0
 
 
 func _ready():
-	engine = Engine_t.new()
+	engine = Engine_t.new(self)
 	engine.start()
-	clutch = Clutch.new(self)
+	clutch = Clutch.new()
 	drivetrain = Drivetrain.new(self)
 	drivetrain.engine_inertia = engine.ENGINE_INERTIA_MOMENT
 	brakes = Brake.new()
@@ -77,12 +81,10 @@ func _physics_process(delta):
 	
 	engine.throttle = throttle_input
 	engine.loop(delta)
-	drivetrain.gearbox_physics_process(delta)
-	clutch.calc_forces()
 	
 	#print("torque= %s" % engine.torque_out)
 	
-	if drivetrain.current_gear == 0:
+	if drivetrain.selected_gear == 0:
 		freewheel(delta)
 	else:
 		engage(engine.torque_out,delta)
@@ -95,6 +97,7 @@ func _physics_process(delta):
 
 func freewheel(delta):
 	avg_front_spin = 0.0
+	clutch_reaction_torque = 0.0
 	# applica la coppia frenante
 	wheel_fl.apply_torque(0.0,front_brake_torque,0.0,delta)
 	wheel_fr.apply_torque(0.0,front_brake_torque,0.0,delta)
@@ -106,14 +109,36 @@ func freewheel(delta):
 
 
 func engage(torque,delta):
+	Utils.log("engage() start")
 	avg_front_spin = 0.0
-
+	avg_rear_spin = 0.0
 	#print("torque= %s" % torque)
 	#var drive_torque = torque * drivetrain.get_gear_ratio()
 	avg_front_spin += (wheel_fl.spin + wheel_fr.spin) * 0.5
+	avg_rear_spin += (wheel_rl.spin + wheel_rr.spin) * 0.5
+	Utils.log("avg_front_spin=%s, avg_rear_spin=%s" % [avg_front_spin,avg_rear_spin])
+	
+	var gearbox_shaft_speed = avg_rear_spin * drivetrain.get_gear_ratio()
+	Utils.log("engine.av=%s, gearbox_shaft_speed=%s" % [engine.get_angular_vel(),gearbox_shaft_speed])
+	var speed_error = engine.get_angular_vel() - gearbox_shaft_speed
+	var clutch_kick = absf(speed_error) * 0.2
+	Utils.log("speed_error=%s, clutch_kick=%s" % [speed_error,clutch_kick])
+	var tr = drivetrain.reaction_torque
+	Utils.log("tr=%s" % tr)
+	var clutch_slip_torque = 0.8 * clutch.friction
+	var reaction_torques = clutch.get_reaction_torques(engine.get_angular_vel(),gearbox_shaft_speed,
+		engine.torque_out,tr,clutch_slip_torque,clutch_kick)
+	
+	if clutch.locked:
+		reaction_torques.x = engine.torque_out
+		#reaction_torques.y = 0.0
+	
+	drive_reaction_torque = reaction_torques.x * (1 - clutch_input)
+	clutch_reaction_torque = reaction_torques.y * (1 - clutch_input)
+	Utils.log("drive_reaction_torque=%s, clutch_reaction_torque=%s" % [drive_reaction_torque,clutch_reaction_torque])
 	
 	# simulazione della trasmissione
-	drivetrain.apply_torque_to_wheel(clutch.output_torque,front_brake_torque,rear_brake_torque,wheels,delta)
+	drivetrain.apply_torque_to_wheel(drive_reaction_torque,front_brake_torque,rear_brake_torque,wheels,delta)
 	
 	speedometer = avg_front_spin * wheel_fl.tire_radius * MS_TO_KMH
 	

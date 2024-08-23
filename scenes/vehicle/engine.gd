@@ -12,6 +12,9 @@ var torque_curve:Curve
 
 # variabili
 
+# riferimenti esterni
+var car:Car = null
+
 # INPUT
 var throttle:float = 0.0
 
@@ -20,12 +23,13 @@ var rpm:float = 0
 
 # OUTPUT
 var torque_out:float = 0.0
+var engine_net_torque = 0.0
 
 
 
-func _init():
+func _init(p_car):
+	car = p_car
 	torque_curve = preload("res://resources/torque_curve.tres")
-	pass
 
 
 # fornisce la coppia all'albero motore, in funzione di rpm e posizione
@@ -56,7 +60,9 @@ func get_torque(p_rpm, p_throttle) -> float:
 func loop(delta):
 
 	torque_out = get_torque(rpm,throttle)
-	var factor = (AV_2_RPM * delta * torque_out / ENGINE_INERTIA_MOMENT)
+	engine_net_torque = torque_out + car.clutch_reaction_torque
+	#engine_net_torque = torque_out
+	var factor = (AV_2_RPM * delta * engine_net_torque / ENGINE_INERTIA_MOMENT)
 	#print("factor = %s" % factor)
 	rpm += factor
 	
@@ -78,5 +84,5 @@ func stop():
 	rpm = 0
 
 
-func get_rotv() -> float:
+func get_angular_vel() -> float:
 	return rpm / AV_2_RPM

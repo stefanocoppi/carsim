@@ -38,7 +38,8 @@ func _process(delta):
 	tire_rl.text += "\nforce_vec = %s" % car.wheel_rl.force_vec
 	
 	console.text = "Engine rpm= %s    speed= %s" % [car.engine.rpm,car.speedometer]
-	console.text += "\nthrottle= %s    gear= %s" % [car.engine.throttle,car.drivetrain.current_gear]
-	console.text += "\ntorque_out= %s" % car.engine.torque_out
+	console.text += "\nthrottle= %s    gear= %s" % [car.engine.throttle,car.drivetrain.selected_gear]
+	console.text += "\nengine_net_torque= %s, clutch_reaction_torque= %s" % [car.engine.engine_net_torque,car.clutch_reaction_torque]
+
 	
 	
