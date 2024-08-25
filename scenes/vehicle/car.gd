@@ -80,7 +80,9 @@ func _physics_process(delta):
 		drivetrain.shift_down()
 	
 	engine.throttle = throttle_input
+	drivetrain.gearbox_loop()
 	engine.loop(delta)
+	
 	
 	#print("torque= %s" % engine.torque_out)
 	

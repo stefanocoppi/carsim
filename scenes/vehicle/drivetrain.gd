@@ -1,6 +1,9 @@
 class_name Drivetrain
 
 
+const SHIFT_TIME = 500   # durata del cambio marcia in ms
+const TIME_TO_DECLUTCH = 200  # tempo per staccare la frizione
+
 
 var gear_ratios = [ 3.08, 2.455, 1.66, 1.175, 1.0 ]
 var final_drive = 3.7
@@ -10,10 +13,12 @@ var drive_inertia = 10.0
 var engine_inertia = 0.0
 var gear_inertia = 0.2
 var selected_gear = 0  # marcia correntemente selezionata
+var future_gear = 0    # marcia da innestare
 var avg_rear_spin = 0.0
 var gearbox_shaft_speed = 0.0
 var reaction_torque = 0.0
 var car:Car = null
+var shift_start_time = 0
 
 
 func _init(p_car):
@@ -21,14 +26,33 @@ func _init(p_car):
 
 
 func shift_up():
-	if (selected_gear< gear_ratios.size()):
-		selected_gear += 1
-
+	if (shift_start_time == 0)  and (selected_gear< gear_ratios.size()):
+		shift_start_time = Time.get_ticks_msec()
+		future_gear += 1
+		car.clutch_input = 1.0
+		#selected_gear += 1
 
 
 func shift_down():
-	if (selected_gear > -1):
-		selected_gear -= 1
+	if (shift_start_time == 0) and (selected_gear > -1):
+		shift_start_time = Time.get_ticks_msec()
+		future_gear -= 1
+		car.clutch_input = 1.0
+		#selected_gear -= 1
+
+
+func gearbox_loop():
+	var t = Time.get_ticks_msec()
+	Utils.log("gearbox_loop()")
+	if (t - shift_start_time) >= TIME_TO_DECLUTCH:
+		selected_gear = future_gear
+	
+	if (t - shift_start_time) >= SHIFT_TIME:
+		car.clutch_input = 0.0
+		shift_start_time = 0
+	
+	if (shift_start_time > 0) and (t - shift_start_time) < SHIFT_TIME:
+		car.engine.throttle = 0.0
 
 
 func get_gear_ratio() -> float:
