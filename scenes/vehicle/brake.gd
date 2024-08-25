@@ -3,7 +3,7 @@ class_name Brake
 const BRAKE_PAD_MU = 0.4
 const EFFECTIVE_RADIUS = 0.25
 
-var max_brake_force = 100000
+var max_brake_force = 50000 #100000
 var front_brake_bias = 0.6
 
 # ritorna le coppie frenanti anteriore e posteriore

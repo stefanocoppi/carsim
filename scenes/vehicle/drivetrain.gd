@@ -6,7 +6,7 @@ const TIME_TO_DECLUTCH = 200  # tempo per staccare la frizione
 
 
 var gear_ratios = [ 3.08, 2.455, 1.66, 1.175, 1.0 ]
-var final_drive = 3.7
+var final_drive = 3.0 #3.7
 var reverse_ratio = 3.2
 var diff_split    = 0.5
 var drive_inertia = 10.0
@@ -30,7 +30,6 @@ func shift_up():
 		shift_start_time = Time.get_ticks_msec()
 		future_gear += 1
 		car.clutch_input = 1.0
-		#selected_gear += 1
 
 
 func shift_down():
@@ -38,7 +37,6 @@ func shift_down():
 		shift_start_time = Time.get_ticks_msec()
 		future_gear -= 1
 		car.clutch_input = 1.0
-		#selected_gear -= 1
 
 
 func gearbox_loop():
