@@ -15,6 +15,7 @@ var engine:Engine_t = null
 var drivetrain:Drivetrain = null
 var clutch:Clutch = null
 var brakes:Brake = null
+var telemetry:Telemetry = null
 
 var max_steer = 0.3
 var steer_speed = 5.0
@@ -31,6 +32,7 @@ var avg_rear_spin = 0.0
 var rear_brake_torque = 0.0
 var front_brake_torque = 0.0
 var speedometer = 0.0    # Km/h
+var odometer = 0.0       # m
 var drive_reaction_torque = 0.0
 var clutch_reaction_torque = 0.0
 
@@ -42,6 +44,7 @@ func _ready():
 	drivetrain = Drivetrain.new(self)
 	drivetrain.engine_inertia = engine.ENGINE_INERTIA_MOMENT
 	brakes = Brake.new()
+	telemetry = Telemetry.new()
 
 
 func _process(delta):
@@ -95,6 +98,12 @@ func _physics_process(delta):
 	wheel_fl.apply_forces(delta)
 	wheel_rr.apply_forces(delta)
 	wheel_rl.apply_forces(delta)
+	
+	# aggiorna l'odometro con la distanza percorsa
+	var distance = (speedometer / MS_TO_KMH) * delta  # in m
+	odometer += distance
+
+	telemetry.write_data(self)
 
 
 func freewheel(delta):
