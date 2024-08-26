@@ -17,8 +17,12 @@ var future_gear = 0    # marcia da innestare
 var avg_rear_spin = 0.0
 var gearbox_shaft_speed = 0.0
 var reaction_torque = 0.0
+var drive_torque = 0.0
 var car:Car = null
 var shift_start_time = 0
+var t1 = 0.0  # coppia inviata al semiasse
+var t2 = 0.0
+var torque_in_diff = 0.0
 
 
 func _init(p_car):
@@ -64,8 +68,11 @@ func get_gear_ratio() -> float:
 
 func differential(torque,brake_torque,wheels,delta):
 	#print("torque= %s" % torque)
-	var t1 = torque * 0.5
-	var t2 = torque * 0.5
+	torque_in_diff = torque
+	#t1 = torque * 0.5
+	#t2 = torque * 0.5
+	t1 = torque
+	t2 = torque
 	var diff_sum = 0.0
 	t2 *= diff_split
 	t1 *= (1 - diff_split)
@@ -85,7 +92,7 @@ func apply_torque_to_wheel(torque, front_brake_torque, rear_brake_torque, wheels
 	var front_wheels = [wheels[2], wheels[3]]
 
 	drive_inertia = (engine_inertia + pow(abs(get_gear_ratio()), 2) * gear_inertia)
-	var drive_torque = torque * get_gear_ratio()
+	drive_torque = torque * get_gear_ratio()
 	
 	#print("drive_torque=%s" % drive_torque)
 	

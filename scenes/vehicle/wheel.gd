@@ -144,7 +144,7 @@ func apply_torque(drive_torque,brake_torque,drive_inertia,delta) -> float:
 	var net_torque = force_vec.y * tire_radius
 	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
-	
+	Utils.log("net_torque=%s" % net_torque)
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
 		spin = 0
 	else:
