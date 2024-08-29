@@ -33,7 +33,7 @@ var z_vel:float = 0.0
 var slip_vec: Vector2 = Vector2.ZERO
 var surface_mu = 1.0
 var ackermann = 0.15
-
+var rolling_resistance = 0.0
 
 @onready var wheel_mesh = $MeshInstance3D
 @onready var car = $'..' # ottiene il nodo padre
@@ -144,7 +144,7 @@ func apply_torque(drive_torque,brake_torque,drive_inertia,delta) -> float:
 	var net_torque = force_vec.y * tire_radius
 	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
-	Utils.log("net_torque=%s" % net_torque)
+	#Utils.log("net_torque=%s" % net_torque)
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
 		spin = 0
 	else:

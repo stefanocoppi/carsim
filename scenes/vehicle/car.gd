@@ -9,7 +9,7 @@ const MS_TO_KMH = 3.6
 @onready var wheel_fl = $WheelFL as Wheel
 @onready var wheel_rr = $WheelRR as Wheel
 @onready var wheel_rl = $WheelRL as Wheel
-@onready var wheels = [ wheel_rl, wheel_rr, wheel_fl, wheel_fr]
+@onready var wheels:Array[Wheel] = [ wheel_rl, wheel_rr, wheel_fl, wheel_fr]
 
 var engine:Engine_t = null
 var drivetrain:Drivetrain = null
