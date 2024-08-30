@@ -7,11 +7,18 @@ const TIME_TO_DECLUTCH = 200  # tempo per staccare la frizione
 enum DIFF_STATE {
 	LOCKED,
 	SLIPPING,
+	OPEN,
+}
+
+enum DIFF_TYPE{
+	LIMITED_SLIP,
+	OPEN_DIFF,
+	LOCKED,
 }
 
 
 var gear_ratios = [ 3.08, 2.455, 1.66, 1.175, 1.0 ]
-var final_drive = 3.0 #3.7
+var final_drive = 3.7 #3.7
 var reverse_ratio = 3.2
 var power_ratio = 2.0
 var coast_ratio = 1.0
@@ -32,6 +39,8 @@ var t1 = 0.0  # coppia inviata al semiasse
 var t2 = 0.0
 var torque_in_diff = 0.0
 var diff_clutch:Clutch = null
+var diff_type = DIFF_TYPE.OPEN_DIFF
+var diff_sum = 0.0
 
 
 func _init(p_car):
@@ -40,17 +49,21 @@ func _init(p_car):
 
 
 func shift_up():
-	if (shift_start_time == 0)  and (selected_gear< gear_ratios.size()):
-		shift_start_time = Time.get_ticks_msec()
-		future_gear += 1
-		car.clutch_input = 1.0
+	#if (shift_start_time == 0)  and (selected_gear< gear_ratios.size()):
+		#shift_start_time = Time.get_ticks_msec()
+		#future_gear += 1
+		#car.clutch_input = 1.0
+	if selected_gear < gear_ratios.size():
+		selected_gear += 1
 
 
 func shift_down():
-	if (shift_start_time == 0) and (selected_gear > -1):
-		shift_start_time = Time.get_ticks_msec()
-		future_gear -= 1
-		car.clutch_input = 1.0
+	#if (shift_start_time == 0) and (selected_gear > -1):
+		#shift_start_time = Time.get_ticks_msec()
+		#future_gear -= 1
+		#car.clutch_input = 1.0
+	if selected_gear > -1:
+		selected_gear -= 1
 
 
 func gearbox_loop():
@@ -79,6 +92,7 @@ func get_gear_ratio() -> float:
 func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 	
 	Utils.log("******************** differential start ************************* ")
+	diff_type = DIFF_TYPE.OPEN_DIFF
 	
 	var diff_state = DIFF_STATE.LOCKED
 	
@@ -103,6 +117,7 @@ func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 	t1 = torque * 0.5
 	t2 = torque * 0.5
 	
+	
 	Utils.log("t1=%s, t2=%s" % [t1,t2])
 	
 	var ratio = power_ratio
@@ -111,12 +126,25 @@ func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 	
 	Utils.log("ratio=%s" % ratio)
 	
-	if abs(delta_torque) > diff_preload and bias >= ratio:
-		diff_state = DIFF_STATE.SLIPPING
+	if diff_type == DIFF_TYPE.OPEN_DIFF:
+		diff_state = DIFF_STATE.OPEN
+	else:
+		if abs(delta_torque) > diff_preload and bias >= ratio:
+			diff_state = DIFF_STATE.SLIPPING
 	
 	Utils.log("diff_state=%s" % diff_state)
 	
 	match diff_state:
+		DIFF_STATE.OPEN:
+			diff_sum = 0.0
+			t2 *= diff_split
+			t1 *= (1-diff_split)
+			
+			diff_sum += wheels[0].apply_torque(t1, brake_torque * 0.5, drive_inertia, delta)
+			diff_sum -= wheels[1].apply_torque(t2, brake_torque * 0.5, drive_inertia, delta)
+			
+			diff_split = 0.5 * (clamp(diff_sum, -1.0, 1.0) + 1.0)
+			
 		DIFF_STATE.SLIPPING:
 			diff_clutch.friction = diff_preload
 			var diff_torques = diff_clutch.get_reaction_torques(wheels[0].spin,wheels[1].spin,
@@ -159,7 +187,8 @@ func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 func apply_torque_to_wheel(torque, front_brake_torque, rear_brake_torque, wheels:Array[Wheel], delta):
 	var front_wheels = [wheels[2], wheels[3]]
 
-	drive_inertia = (engine_inertia + pow(abs(get_gear_ratio()), 2) * gear_inertia)
+	drive_inertia = (engine_inertia + pow(abs(get_gear_ratio()), 2) * gear_inertia) * (1 -car.clutch_input)
+	
 	drive_torque = torque * get_gear_ratio()
 	
 	#print("drive_torque=%s" % drive_torque)

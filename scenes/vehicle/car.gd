@@ -82,9 +82,7 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("ShiftDown"):
 		drivetrain.shift_down()
 	
-	engine.throttle = throttle_input
-	drivetrain.gearbox_loop()
-	engine.loop(delta)
+	
 	
 	
 	#print("torque= %s" % engine.torque_out)
@@ -93,6 +91,10 @@ func _physics_process(delta):
 		freewheel(delta)
 	else:
 		engage(engine.torque_out,delta)
+	
+	engine.throttle = throttle_input
+	#drivetrain.gearbox_loop()
+	engine.loop(delta)
 	
 	wheel_fr.apply_forces(delta)
 	wheel_fl.apply_forces(delta)

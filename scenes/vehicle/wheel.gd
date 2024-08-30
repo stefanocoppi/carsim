@@ -34,6 +34,7 @@ var slip_vec: Vector2 = Vector2.ZERO
 var surface_mu = 1.0
 var ackermann = 0.15
 var rolling_resistance = 0.0
+var acc = 0.0
 
 @onready var wheel_mesh = $MeshInstance3D
 @onready var car = $'..' # ottiene il nodo padre
@@ -69,9 +70,11 @@ func apply_forces(delta):
 	local_vel = (global_transform.origin - prev_pos) / delta * global_transform.basis
 	#print("local_vel=%s" % local_vel)
 	z_vel = -local_vel.z
-	planar_vect = Vector2(local_vel.x, local_vel.z)
-	if planar_vect.length()> 0.01:
-		planar_vect = planar_vect.normalized()
+	#planar_vect = Vector2(local_vel.x, local_vel.z)
+	#if planar_vect.length()> 0.01:
+		#planar_vect = planar_vect.normalized()
+		
+	planar_vect = Vector2(local_vel.x, local_vel.z).normalized()
 	prev_pos = global_transform.origin
 	
 	if is_colliding():
@@ -121,8 +124,6 @@ func apply_forces(delta):
 		#print("slip_vec=%s" % slip_vec)
 		
 		surface_mu = 1.0
-		#y_force = 2500.0
-		#slip_vec = Vector2(slip_vec.x,-0.01)
 		
 		# calcola le forze generate dai pneumatici
 		force_vec = tire_model.update_tire_forces(slip_vec,y_force,surface_mu)
@@ -142,14 +143,19 @@ func apply_torque(drive_torque,brake_torque,drive_inertia,delta) -> float:
 	var prev_spin = spin
 	# traction torque
 	var net_torque = force_vec.y * tire_radius
+	Utils.log("net_torque=%s, drive_torque=%s" % [net_torque,drive_torque])
 	# aggiungiamo la coppia del motore
 	net_torque += drive_torque
+	
+	
 	#Utils.log("net_torque=%s" % net_torque)
 	if abs(spin) < 5 and brake_torque > abs(net_torque):
 		spin = 0
 	else:
 		net_torque -= brake_torque * sign(spin)
-		spin += delta * net_torque / (wheel_inertia + drive_inertia)
+		acc = delta * net_torque / (wheel_inertia + drive_inertia)
+		spin += acc
+	
 	
 	if drive_torque * delta == 0:
 		return 0.5
