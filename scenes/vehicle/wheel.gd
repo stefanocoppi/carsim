@@ -35,6 +35,7 @@ var surface_mu = 1.0
 var ackermann = 0.15
 var rolling_resistance = 0.0
 var acc = 0.0
+var traction_torque = 0.0
 
 @onready var wheel_mesh = $MeshInstance3D
 @onready var car = $'..' # ottiene il nodo padre
@@ -142,10 +143,10 @@ func apply_torque(drive_torque,brake_torque,drive_inertia,delta) -> float:
 	
 	var prev_spin = spin
 	# traction torque
-	var net_torque = force_vec.y * tire_radius
-	Utils.log("net_torque=%s, drive_torque=%s" % [net_torque,drive_torque])
+	traction_torque = 0.8*force_vec.y * tire_radius
+	#Utils.log("net_torque=%s, drive_torque=%s" % [net_torque,drive_torque])
 	# aggiungiamo la coppia del motore
-	net_torque += drive_torque
+	var net_torque = traction_torque + drive_torque
 	
 	
 	#Utils.log("net_torque=%s" % net_torque)
