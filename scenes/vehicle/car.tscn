@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d3e245l0nmkl5" path="res://scenes/gui/gui.tscn" id="5_smyof"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_h7x0j"]
-size = Vector3(2, 0.774292, 4.514)
+size = Vector3(1.89856, 0.750427, 4.47469)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yvdrl"]
 resource_name = "Material"
@@ -138,7 +138,7 @@ mass = 1000.0
 script = ExtResource("1_kmvh3")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.519528, 0.0356783)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00396729, 0.53146, -0.0590893)
 shape = SubResource("BoxShape3D_h7x0j")
 
 [node name="SideCamera" type="Camera3D" parent="RigidBody3D"]
@@ -163,7 +163,7 @@ mesh = SubResource("ArrayMesh_plop6")
 mesh = SubResource("ArrayMesh_x17kq")
 
 [node name="WheelFR" type="RayCast3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.782, 0.383, -1.22345)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.782, 0.380972, -1.22345)
 script = ExtResource("2_5ajml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/WheelFR"]
@@ -172,7 +172,7 @@ mesh = SubResource("ArrayMesh_gd6ys")
 skeleton = NodePath("")
 
 [node name="WheelFL" type="RayCast3D" parent="RigidBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.772457, 0.382942, -1.22402)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.772457, 0.383334, -1.22402)
 script = ExtResource("2_5ajml")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D/WheelFL"]

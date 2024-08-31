@@ -6,9 +6,9 @@ var tire_model:BaseTireModel
 
 
 # parametri delle sospensioni
-var spring_length = 0.15 # 0.1
+var spring_length = 0.15 # 0.10
 var wheel_mass = 30.0
-var tire_radius = 0.3 #0.31
+var tire_radius = 0.30 #0.31
 var spring_stiffness = 60.0
 var bump = 8.0
 var rebound = 9.0
@@ -52,10 +52,10 @@ func _ready():
 
 func _process(delta):
 	#DebugDraw3D.draw_line(global_position,global_position+target_position,Color.WHITE)
-	
+	wheel_mesh.rotate_x(wrapf(-spin * delta,0, TAU))
 	wheel_mesh.position.y = -spring_curr_length
 	
-	wheel_mesh.rotate_x(wrapf(-spin * delta,0, TAU))
+	
 	
 
 func _physics_process(delta):
@@ -108,6 +108,7 @@ func apply_forces(delta):
 	y_force = max(0, y_force)
 	#print("y_force=%s" % y_force)
 	
+	
 	# calcola lo slip
 	slip_vec.x = asin(clamp(-planar_vect.x, -1, 1)) # X slip is lateral slip
 	slip_vec.y = 0.0 # Y slip is the longitudinal Z slip
@@ -117,12 +118,17 @@ func apply_forces(delta):
 	if is_colliding():
 		#z_vel = 8.9
 		#spin = 30.0
-		if not is_zero_approx(z_vel):
+		#if not is_zero_approx(z_vel):
+			#slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
+		#else:
+			#slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel + 0.0000001)
+		
+		if z_vel != 0.0:
 			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel)
-		else:
-			slip_vec.y = (z_vel - spin * tire_radius) / abs(z_vel + 0.0000001)
 			
 		#print("slip_vec=%s" % slip_vec)
+		#if slip_vec.y < 0.0:
+			#slip_vec.y = -slip_vec.y
 		
 		surface_mu = 1.0
 		
@@ -137,13 +143,14 @@ func apply_forces(delta):
 		car.apply_force(global_transform.basis.z * force_vec.y, contact)
 	else:
 		spin -= sign(spin) * delta * 2 / wheel_inertia # stop undriven wheels from spinning endlessly
+		
 
 
 func apply_torque(drive_torque,brake_torque,drive_inertia,delta) -> float:
 	
 	var prev_spin = spin
 	# traction torque
-	traction_torque = 0.8*force_vec.y * tire_radius
+	traction_torque = force_vec.y * tire_radius
 	#Utils.log("net_torque=%s, drive_torque=%s" % [net_torque,drive_torque])
 	# aggiungiamo la coppia del motore
 	var net_torque = traction_torque + drive_torque
