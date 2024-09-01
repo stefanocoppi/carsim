@@ -39,7 +39,7 @@ func _process(delta):
 	
 	console.text = "Engine rpm= %s    speed= %s  distance=%s" % [car.engine.rpm,car.speedometer,car.odometer]
 	console.text += "\nthrottle= %s    gear= %s" % [car.engine.throttle,car.drivetrain.selected_gear]
-	console.text += "\ndrive_torque= %s" % car.drivetrain.drive_torque
+	console.text += "\ndiff_state= %s" % car.drivetrain.diff_state
 
 	
 	

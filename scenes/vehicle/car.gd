@@ -93,7 +93,7 @@ func _physics_process(delta):
 		engage(engine.torque_out,delta)
 	
 	engine.throttle = throttle_input
-	#drivetrain.gearbox_loop()
+	drivetrain.gearbox_loop()
 	engine.loop(delta)
 	
 	wheel_fr.apply_forces(delta)
