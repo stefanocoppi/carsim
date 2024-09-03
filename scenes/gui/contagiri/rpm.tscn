@@ -1,0 +1,65 @@
+[gd_scene load_steps=5 format=3 uid="uid://smikyh5v6gyl"]
+
+[ext_resource type="Texture2D" uid="uid://bjdkda8dfkkc" path="res://assets/ui/hud contagiri/contagiri_sfondo.png" id="1_8u35k"]
+[ext_resource type="Script" path="res://scenes/gui/contagiri/rpm.gd" id="1_g74si"]
+[ext_resource type="Texture2D" uid="uid://bwullxakw2017" path="res://assets/ui/hud contagiri/contagiri_lancetta.png" id="2_8e8sq"]
+[ext_resource type="FontFile" uid="uid://0wetdu0xchhj" path="res://assets/ui/hud contagiri/ARIALBD.TTF" id="3_r6m5h"]
+
+[node name="Rpm" type="Control"]
+texture_filter = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -880.0
+offset_bottom = -320.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g74si")
+
+[node name="sfondo" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("1_8u35k")
+stretch_mode = 5
+
+[node name="marcia" type="Label" parent="."]
+layout_mode = 0
+offset_left = 158.0
+offset_top = 83.0
+offset_right = 256.0
+offset_bottom = 236.0
+theme_override_colors/font_color = Color(0.713726, 0.713726, 0.713726, 1)
+theme_override_fonts/font = ExtResource("3_r6m5h")
+theme_override_font_sizes/font_size = 136
+text = "N"
+
+[node name="velocita" type="Label" parent="."]
+layout_mode = 0
+offset_left = 119.0
+offset_top = 247.0
+offset_right = 188.0
+offset_bottom = 293.0
+theme_override_colors/font_color = Color(0.713726, 0.713726, 0.713726, 1)
+theme_override_fonts/font = ExtResource("3_r6m5h")
+theme_override_font_sizes/font_size = 40
+text = "100"
+
+[node name="velocita2" type="Label" parent="."]
+layout_mode = 0
+offset_left = 195.0
+offset_top = 247.0
+offset_right = 350.0
+offset_bottom = 293.0
+theme_override_colors/font_color = Color(0.713726, 0.713726, 0.713726, 1)
+theme_override_fonts/font = ExtResource("3_r6m5h")
+theme_override_font_sizes/font_size = 40
+text = "Km/h"
+
+[node name="lancetta" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+pivot_offset = Vector2(200, 200)
+texture = ExtResource("2_8e8sq")

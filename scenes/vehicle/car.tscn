@@ -201,3 +201,4 @@ skeleton = NodePath("")
 [node name="Gui" parent="." instance=ExtResource("5_smyof")]
 
 [editable path="RigidBody3D/sport_car"]
+[editable path="Gui"]

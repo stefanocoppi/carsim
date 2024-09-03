@@ -10,6 +10,7 @@ const MS_TO_KMH = 3.6
 @onready var wheel_rr = $WheelRR as Wheel
 @onready var wheel_rl = $WheelRL as Wheel
 @onready var wheels:Array[Wheel] = [ wheel_rl, wheel_rr, wheel_fl, wheel_fr]
+@onready var rev_counter = $"../Gui/Rpm"
 
 var engine:Engine_t = null
 var drivetrain:Drivetrain = null
@@ -48,8 +49,9 @@ func _ready():
 
 
 func _process(delta):
-	pass
-	#print("throttle_input=%s" % throttle_input)
+	rev_counter.set_gear(drivetrain.selected_gear)
+	rev_counter.set_speed(speedometer)
+	rev_counter.set_rpm(engine.rpm)
 
 
 func _physics_process(delta):
