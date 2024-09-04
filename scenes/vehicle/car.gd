@@ -37,8 +37,16 @@ var odometer = 0.0       # m
 var drive_reaction_torque = 0.0
 var clutch_reaction_torque = 0.0
 
+var json_data = null
+
 
 func _ready():
+	load_physics_params("res://assets/car/sport_car.json")
+	wheel_fl.load_params(json_data["wheel_fl"])
+	wheel_fr.load_params(json_data["wheel_fr"])
+	wheel_rl.load_params(json_data["wheel_rl"])
+	wheel_rr.load_params(json_data["wheel_rr"])
+	
 	engine = Engine_t.new(self)
 	engine.start()
 	clutch = Clutch.new()
@@ -161,4 +169,10 @@ func engage(torque,delta):
 	#wheel_fl.apply_torque(0.0,front_brake_torque,delta)
 	#wheel_fr.apply_torque(0.0,front_brake_torque,delta)
 	
+
+func load_physics_params(filename):
+	var file = FileAccess.open(filename,FileAccess.READ)
+	var content = file.get_as_text()
+	json_data = JSON.parse_string(content)
+	file.close()
 	

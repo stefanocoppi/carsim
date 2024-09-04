@@ -1,0 +1,39 @@
+{
+	"wheel_fl" : {
+		"mass" : 30.0,
+		"radius" : 0.30,
+		"spring_length" : 0.15,
+		"spring_stiffness" : 60.0,
+		"bump" : 8.0,
+		"rebound" : 9.0,
+		"ackermann" : 0.15
+	},
+	"wheel_fr" : {
+		"mass" : 30.0,
+		"radius" : 0.30,
+		"spring_length" : 0.15,
+		"spring_stiffness" : 60.0,
+		"bump" : 8.0,
+		"rebound" : 9.0,
+		"ackermann" : 0.15
+	},
+	"wheel_rl" : {
+		"mass" : 30.0,
+		"radius" : 0.30,
+		"spring_length" : 0.15,
+		"spring_stiffness" : 60.0,
+		"bump" : 8.0,
+		"rebound" : 9.0,
+		"ackermann" : 0.15
+	},
+	"wheel_rr" : {
+		"mass" : 30.0,
+		"radius" : 0.30,
+		"spring_length" : 0.15,
+		"spring_stiffness" : 60.0,
+		"bump" : 8.0,
+		"rebound" : 9.0,
+		"ackermann" : 0.15
+	}
+}
+

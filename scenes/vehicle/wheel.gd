@@ -6,13 +6,13 @@ var tire_model:BaseTireModel
 
 
 # parametri delle sospensioni
-var spring_length = 0.15 # 0.10
-var wheel_mass = 30.0
-var tire_radius = 0.30 #0.31
-var spring_stiffness = 60.0
-var bump = 8.0
-var rebound = 9.0
-
+var spring_length = 0.0 #0.15 # 0.10
+var wheel_mass = 0.0 #30.0
+var tire_radius = 0.0 #0.30 #0.31
+var spring_stiffness = 0.0 #60.0
+var bump = 0.0 #8.0
+var rebound = 0.0 #9.0
+var ackermann = 0.0 # 0.15
 
 # variabili delle sospensioni
 var spring_curr_length: float = spring_length
@@ -32,7 +32,6 @@ var local_vel = Vector3.ZERO
 var z_vel:float = 0.0
 var slip_vec: Vector2 = Vector2.ZERO
 var surface_mu = 1.0
-var ackermann = 0.15
 var rolling_resistance = 0.0
 var acc = 0.0
 var traction_torque = 0.0
@@ -42,9 +41,7 @@ var traction_torque = 0.0
 
 
 func _ready():
-	set_target_position(Vector3.DOWN * (spring_length + tire_radius))
 	
-	wheel_inertia = 0.5 * wheel_mass * pow(tire_radius, 2)
 	
 	tire_model = PacejkaTireModel.new()
 
@@ -177,3 +174,18 @@ func steer(input,max_steer):
 
 func get_reaction_torque() -> float:
 	return force_vec.y * tire_radius
+
+
+# carica i parametri fisici da un dizionario JSON
+func load_params(json_data):
+	wheel_mass = float(json_data["mass"])
+	tire_radius = json_data["radius"]
+	spring_length = json_data["spring_length"]
+	spring_stiffness = json_data["spring_stiffness"]
+	bump = json_data["bump"]
+	rebound = json_data["rebound"]
+	ackermann = json_data["ackermann"]
+	
+	set_target_position(Vector3.DOWN * (spring_length + tire_radius))
+	wheel_inertia = 0.5 * wheel_mass * pow(tire_radius, 2)
+	
