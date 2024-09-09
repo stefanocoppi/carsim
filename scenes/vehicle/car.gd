@@ -18,8 +18,10 @@ var clutch:Clutch = null
 var brakes:Brake = null
 var telemetry:Telemetry = null
 
-var max_steer = 0.3
-var steer_speed = 5.0
+# parametri fisici
+var max_steer = 0.0 #0.3
+var steer_speed = 0.0 #5.0
+
 
 var throttle_input: float = 0.0
 var brake_input = 0.0
@@ -37,23 +39,31 @@ var odometer = 0.0       # m
 var drive_reaction_torque = 0.0
 var clutch_reaction_torque = 0.0
 
-var json_data = null
-
 
 func _ready():
-	load_physics_params("res://assets/car/sport_car.json")
-	wheel_fl.load_params(json_data["wheel_fl"])
-	wheel_fr.load_params(json_data["wheel_fr"])
-	wheel_rl.load_params(json_data["wheel_rl"])
-	wheel_rr.load_params(json_data["wheel_rr"])
+	var physics_params = load_physics_params("res://assets/car/sport_car.json")
+	wheel_fl.init_params(physics_params["wheel_fl"],physics_params["pacejka"])
+	wheel_fr.init_params(physics_params["wheel_fr"],physics_params["pacejka"])
+	wheel_rl.init_params(physics_params["wheel_rl"],physics_params["pacejka"])
+	wheel_rr.init_params(physics_params["wheel_rr"],physics_params["pacejka"])
 	
 	engine = Engine_t.new(self)
+	engine.init_params(physics_params["engine"])
 	engine.start()
 	clutch = Clutch.new()
+	clutch.init_params(physics_params["clutch"])
 	drivetrain = Drivetrain.new(self)
-	drivetrain.engine_inertia = engine.ENGINE_INERTIA_MOMENT
+	drivetrain.init_params(physics_params["drivetrain"])
+	drivetrain.engine_inertia = engine.inertia_moment
 	brakes = Brake.new()
+	brakes.init_params(physics_params["brakes"])
 	telemetry = Telemetry.new()
+	init_params(physics_params)
+
+
+func init_params(json_data):
+	max_steer = json_data["steer"]["max_steer"]
+	steer_speed = json_data["steer"]["steer_speed"]
 
 
 func _process(delta):
@@ -170,9 +180,13 @@ func engage(torque,delta):
 	#wheel_fr.apply_torque(0.0,front_brake_torque,delta)
 	
 
-func load_physics_params(filename):
+# carica i parametri fisici dell'auto da un file JSON
+# ritorna un dizionario con i parametri
+func load_physics_params(filename) -> Dictionary:
 	var file = FileAccess.open(filename,FileAccess.READ)
 	var content = file.get_as_text()
-	json_data = JSON.parse_string(content)
+	var json_data = JSON.parse_string(content)
 	file.close()
+	
+	return json_data
 	

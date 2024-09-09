@@ -5,11 +5,20 @@ class_name PacejkaTireModel
 extends BaseTireModel
 
 
-var pacejka_b = 10.0
-var pacejka_c_lat = 1.35
-var pacejka_c_long = 1.65
-var pacejka_d = 1.0
+var pacejka_b = 0.0 #10.0
+var pacejka_c_lat = 0.0 #1.35
+var pacejka_c_long = 0.0 #1.65
+var pacejka_d = 0.0 #1.0
 var pacejka_e = 0.0
+
+
+# inizializza i parametri del modello a partire da un dizionario
+func init_params(json_data):
+	pacejka_b = json_data["coeff_b"]
+	pacejka_c_lat = json_data["coeff_c_lat"]
+	pacejka_c_long = json_data["coeff_c_long"]
+	pacejka_d = json_data["coeff_d"]
+	pacejka_e = json_data["coeff_e"]
 
 
 # equazione della magic formula di Pacejka

@@ -2,10 +2,14 @@ class_name Clutch
 
 
 # parametri fisici
-var friction = 320.0    # valore massimo di coppia trasmissibile dalla frizione
+var friction = 0.0 #320.0    # valore massimo di coppia trasmissibile dalla frizione
 
 # stato
 var locked = false       # indica se la frizione è solidale con il motore (true)
+
+
+func init_params(json_data):
+	friction = json_data["friction"]
 
 
 # calcola le coppie di reazione della frizione

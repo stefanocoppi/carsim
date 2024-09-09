@@ -41,10 +41,7 @@ var traction_torque = 0.0
 
 
 func _ready():
-	
-	
-	tire_model = PacejkaTireModel.new()
-
+	pass
 
 
 func _process(delta):
@@ -176,8 +173,8 @@ func get_reaction_torque() -> float:
 	return force_vec.y * tire_radius
 
 
-# carica i parametri fisici da un dizionario JSON
-func load_params(json_data):
+# inizializza i parametri fisici da un dizionario JSON
+func init_params(json_data,pacejka_data):
 	wheel_mass = float(json_data["mass"])
 	tire_radius = json_data["radius"]
 	spring_length = json_data["spring_length"]
@@ -188,4 +185,7 @@ func load_params(json_data):
 	
 	set_target_position(Vector3.DOWN * (spring_length + tire_radius))
 	wheel_inertia = 0.5 * wheel_mass * pow(tire_radius, 2)
+	
+	tire_model = PacejkaTireModel.new()
+	tire_model.init_params(pacejka_data)
 	

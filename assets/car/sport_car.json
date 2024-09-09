@@ -34,6 +34,46 @@
 		"bump" : 8.0,
 		"rebound" : 9.0,
 		"ackermann" : 0.15
+	},
+	"pacejka": {
+		"coeff_b" : 10.0,
+		"coeff_c_lat" : 1.35,
+		"coeff_c_long" : 1.65,
+		"coeff_d" : 1.0,
+		"coeff_e" : 0.0
+	},	
+	"engine" : {
+		"max_rpm" : 8000,
+		"rpm_idle" : 900,
+		"max_torque" : 260.0,
+		"engine_brake" : 150.0,
+		"engine_drag" : 0.03,
+		"inertia_moment" : 0.14
+	},
+	"clutch" : {
+		"friction" : 320.0
+	},
+	"drivetrain" : {
+		"gear_ratios" : [ 3.08, 2.455, 1.66, 1.175, 1.0 ],
+		"final_drive" : 3.7,
+		"reverse_ratio" : 3.2,
+		"diff_type" : "OPEN_DIFF",
+		"power_ratio" : 2.0,
+		"coast_ratio" : 1.0,
+		"diff_preload" : 10.0,
+		"drive_inertia" : 10.0,
+		"gear_inertia" : 0.2,
+		"shift_time" : 500,
+		"time_to_declutch" : 200
+	},
+	"brakes" : {
+		"brake_pad_mu" : 0.4,
+		"effective_radius" : 0.25,
+		"max_brake_force" : 50000,
+		"front_brake_bias" : 0.6
+	},
+	"steer" : {
+		"max_steer" : 0.3,
+		"steer_speed" : 5.0
 	}
 }
-

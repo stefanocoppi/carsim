@@ -1,1 +1,0 @@
-distance,speed,rpm,selected_gear,fl_force_vec.y,fl_slip_vec.y,fl_z_vel,fl_spin,fr_force_vec.y,fr_slip_vec.y,fr_z_vel,fr_spin

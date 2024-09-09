@@ -1,9 +1,6 @@
 class_name Drivetrain
 
 
-const SHIFT_TIME = 500   # durata del cambio marcia in ms
-const TIME_TO_DECLUTCH = 200  # tempo per staccare la frizione
-
 enum DIFF_STATE {
 	LOCKED,
 	SLIPPING,
@@ -16,17 +13,21 @@ enum DIFF_TYPE{
 	LOCKED,
 }
 
+# parametri fisici
+var gear_ratios = [] #[ 3.08, 2.455, 1.66, 1.175, 1.0 ]
+var final_drive = 0.0 #3.7
+var reverse_ratio = 0.0 #3.2
+var power_ratio = 0.0 #2.0
+var coast_ratio = 0.0 #1.0
+var diff_preload = 0.0 #10.0
+var drive_inertia = 0.0 #10.0
+var gear_inertia = 0.0 #0.2
+var shift_time = 0 #500   # durata del cambio marcia in ms
+var time_to_declutch = 0 #200  # tempo per staccare la frizione
+var diff_type = null
 
-var gear_ratios = [ 3.08, 2.455, 1.66, 1.175, 1.0 ]
-var final_drive = 3.7 #3.7
-var reverse_ratio = 3.2
-var power_ratio = 2.0
-var coast_ratio = 1.0
-var diff_preload = 10.0
-var diff_split    = 0.5
-var drive_inertia = 10.0
 var engine_inertia = 0.0
-var gear_inertia = 0.2
+var diff_split    = 0.5
 var selected_gear = 0  # marcia correntemente selezionata
 var future_gear = 0    # marcia da innestare
 var avg_rear_spin = 0.0
@@ -39,7 +40,6 @@ var t1 = 0.0  # coppia inviata al semiasse
 var t2 = 0.0
 var torque_in_diff = 0.0
 var diff_clutch:Clutch = null
-var diff_type = DIFF_TYPE.OPEN_DIFF
 var diff_sum = 0.0
 var diff_state = DIFF_STATE.LOCKED
 
@@ -47,6 +47,26 @@ var diff_state = DIFF_STATE.LOCKED
 func _init(p_car):
 	car = p_car
 	diff_clutch = Clutch.new()
+
+
+func init_params(json_data):
+	gear_ratios = json_data["gear_ratios"]
+	final_drive = json_data["final_drive"]
+	reverse_ratio = json_data["reverse_ratio"]
+	power_ratio = json_data["power_ratio"]
+	coast_ratio = json_data["coast_ratio"]
+	diff_preload = json_data["diff_preload"]
+	drive_inertia = json_data["drive_inertia"]
+	gear_inertia = json_data["gear_inertia"]
+	shift_time = json_data["shift_time"]
+	time_to_declutch = json_data["time_to_declutch"]
+	match json_data["diff_type"]:
+		"OPEN_DIFF":
+			diff_type = DIFF_TYPE.OPEN_DIFF
+		"LIMITED_SLIP":
+			diff_type = DIFF_TYPE.LIMITED_SLIP
+		"LOCKED":
+			diff_type = DIFF_STATE.LOCKED
 
 
 func shift_up():
@@ -72,14 +92,14 @@ func shift_down():
 func gearbox_loop():
 	var t = Time.get_ticks_msec()
 	Utils.log("gearbox_loop()")
-	if (t - shift_start_time) >= TIME_TO_DECLUTCH:
+	if (t - shift_start_time) >= time_to_declutch:
 		selected_gear = future_gear
 	
-	if (t - shift_start_time) >= SHIFT_TIME:
+	if (t - shift_start_time) >= shift_time:
 		car.clutch_input = 0.0
 		shift_start_time = 0
 	
-	if (shift_start_time > 0) and (t - shift_start_time) < SHIFT_TIME:
+	if (shift_start_time > 0) and (t - shift_start_time) < shift_time:
 		car.engine.throttle = 0.0
 
 
@@ -95,7 +115,6 @@ func get_gear_ratio() -> float:
 func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 	
 	Utils.log("******************** differential start ************************* ")
-	diff_type = DIFF_TYPE.OPEN_DIFF
 	
 	diff_state = DIFF_STATE.LOCKED
 	
@@ -146,7 +165,7 @@ func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 			diff_sum += wheels[0].apply_torque(t1, brake_torque * 0.5, drive_inertia, delta)
 			diff_sum -= wheels[1].apply_torque(t2, brake_torque * 0.5, drive_inertia, delta)
 			
-			var max_spin = (car.engine.MAX_RPM / car.engine.AV_2_RPM) / get_gear_ratio()
+			var max_spin = (car.engine.max_rpm / car.engine.AV_2_RPM) / get_gear_ratio()
 			wheels[0].spin = clampf(wheels[0].spin,0.0,max_spin)
 			wheels[1].spin = clampf(wheels[1].spin,0.0,max_spin)
 			Utils.log("max_spin=%s" % max_spin)
@@ -182,7 +201,7 @@ func differential(torque,brake_torque,wheels:Array[Wheel],delta):
 			
 			spin = avg_spin + delta * net_torque / (wheels[0].wheel_inertia + drive_inertia + wheels[1].wheel_inertia)
 			
-			var max_spin = (car.engine.MAX_RPM / car.engine.AV_2_RPM) / get_gear_ratio()
+			var max_spin = (car.engine.max_rpm / car.engine.AV_2_RPM) / get_gear_ratio()
 			spin = clampf(spin,0.0,max_spin)
 			Utils.log("max_spin=%s" % max_spin)
 			Utils.log("net_torque=%s, spin=%s" % [net_torque,spin])
